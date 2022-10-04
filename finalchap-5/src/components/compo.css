@@ -1,4 +1,60 @@
-.car {
-  display: grid;
+.carousel-item {
   height: 100vh;
+  width: 100vw;
+}
+
+.carousel-item > img {
+  width: 100vw;
+}
+
+.carousel-caption {
+  display: flex;
+  align-items: flex-start;
+  height: 70%;
+  flex-direction: column;
+  line-height: 2rem;
+  margin-right: 20rem;
+}
+.carousel-caption > h1 {
+  font-size: 4rem;
+  color: white;
+  margin-right: 20rem;
+}
+
+.carousel-caption > p {
+  font-size: 1.25rem;
+}
+
+nav {
+  background: transparent;
+  width: 100vw;
+  height: 5rem;
+  position: fixed;
+  top: 0;
+  z-index: 11;
+}
+/* change navbar style in scroll using javascript */
+
+.nav_container {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav_menu {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+.nav_menu a {
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+.nav_menu :hover {
+  color: var(--color-bg2);
+}
+
+Input {
+  width: 50%;
 }

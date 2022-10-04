@@ -1,8 +1,10 @@
 import Carousel from "react-bootstrap/Carousel";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./compo.css";
+import Button from "./button";
 
-function UncontrolledExample() {
+function UncontrolledExample(props) {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
@@ -18,42 +20,58 @@ function UncontrolledExample() {
       });
   }, []);
   return (
-    <div className="car container  h-fit box-border">
+    <div className="caro">
       {movies && (
         <Carousel>
           <Carousel.Item>
             <img
-              className="d-block w-screen"
-              src={`https://image.tmdb.org/t/p/original/jsoz1HlxczSuTx0mDl2h0lxy36l.jpg`}
+              className=" saturate-50   "
+              src={`https://image.tmdb.org/t/p/original/o5Uy3zM1SNxzoMwy5H04GQAmfNF.jpg`}
               alt="First slide"
             />
-            <Carousel.Caption classname="place-content-center">
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <Carousel.Caption>
+              <h1 className="text-left">Blonde</h1>
+              <p className="text-left">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta
+                voluptates quaerat placeat quibusdam ducimus, ad quae accusamus
+                unde recusandae consectetur.
+              </p>
+              <Button>WATCH TRAILER</Button>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className=" saturate-50"
+              src={`https://image.tmdb.org/t/p/original/jauI01vUIkPA0xVsamGj0Gs1nNL.jpg`}
+              alt="First slide"
+            />
+            <Carousel.Caption>
+              <h1 className="font-sans text-left">Jurassic World Dominion</h1>
+              <p className="text-left">
+                {" "}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Veritatis magni quod hic ipsum dolorem rem numquam incidunt,
+                libero labore quas.{" "}
+              </p>
+              <Button>WATCH TRAILER</Button>
             </Carousel.Caption>
           </Carousel.Item>
 
           <Carousel.Item>
             <img
-              className="d-block w-screen"
-              src={`https://image.tmdb.org/t/p/original/jsoz1HlxczSuTx0mDl2h0lxy36l.jpg`}
+              className=" saturate-50"
+              src={`https://image.tmdb.org/t/p/original/dxihDyyA6RSAtLZog4l1MYdDqLD.jpg`}
               alt="First slide"
             />
-            <Carousel.Caption classname="place-content-center">
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-
-          <Carousel.Item>
-            <img
-              className="d-block w-screen"
-              src={`https://image.tmdb.org/t/p/original/jsoz1HlxczSuTx0mDl2h0lxy36l.jpg`}
-              alt="First slide"
-            />
-            <Carousel.Caption classname="place-content-center">
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <Carousel.Caption>
+              <h1 className="text-left">Vesper</h1>
+              <p className="text-left">
+                {" "}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
+                minima debitis iure error vel, ea neque inventore odit
+                reprehenderit omnis.{" "}
+              </p>
+              <Button>WATCH TRAILER</Button>
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
