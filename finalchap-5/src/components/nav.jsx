@@ -1,10 +1,10 @@
 import React from "react";
 import "./compo.css";
 import logo from "./assets/logoNav.svg";
-import Button from "./button";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Input } from "antd";
-// import Form from "react-bootstrap/Form";
+import { Input } from "reactstrap";
+import Button from "react-bootstrap/Button";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
@@ -15,23 +15,28 @@ function Nav(props) {
   const handleMouseLeave = () => {
     setIsHover(false);
   };
-
+  window.addEventListener("scroll", () => {
+    document
+      .querySelector("nav")
+      .classList.toggle("window-scroll", window.scrollY > 0);
+  });
   const inputStyle = {
-    width: "50%",
+    width: "40%",
+    height: "50%",
     color: "white",
     borderRadius: "25px",
-    backgroundColor: "transparent",
-    borderColor: isHover ? "red " : "red",
   };
+  const navigate = useNavigate();
   return (
     <div>
       <nav>
         <div className="container nav_container">
-          <a href="index.html">
-            <img src={logo} alt="logo" />
-          </a>
+          <div className="logo cursor-pointer">
+            <img src={logo} alt="logo" onClick={() => navigate("/")} />
+          </div>
 
           <Input
+            className="seacrh bg-transparent     hover:border-rose-700"
             style={inputStyle}
             placeholder="Search Movies"
             onMouseEnter={handleMouseEnter}
@@ -39,9 +44,9 @@ function Nav(props) {
             // prefix={<SearchOutlined />}
           />
 
-          <div className="items gap-x-1">
-            <Button>Login</Button>
-            <Button>Register</Button>
+          <div className="items flex space-x-4">
+            <Button variant="outline-danger">Login</Button>
+            <Button variant="danger">Register</Button>
           </div>
         </div>
       </nav>

@@ -1,14 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Details from "./components/detail";
+import "swiper/css/bundle";
+import "./App.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route>
+          <Route path="/" element={<App />} />
+          <Route path=":id" element={<Details />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

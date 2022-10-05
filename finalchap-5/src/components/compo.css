@@ -33,12 +33,11 @@ nav {
   top: 0;
   z-index: 11;
 }
-/* change navbar style in scroll using javascript */
 
 .nav_container {
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -47,14 +46,35 @@ nav {
   align-items: center;
   gap: 4rem;
 }
-.nav_menu a {
-  font-size: 0.9rem;
-  transition: var(--transition);
-}
-.nav_menu :hover {
-  color: var(--color-bg2);
+
+.window-scroll {
+  background: black;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
 }
 
-Input {
-  width: 50%;
+.btn {
+  border-radius: 30px !important;
+}
+.cont img {
+  width: 100%;
+  position: relative;
+}
+
+.cont .overlay {
+  position: absolute;
+  top: 80px;
+  right: 15px;
+
+  text-align: left;
+}
+
+ul,
+p,
+.title {
+  padding-left: 0.25rem !important;
+  text-shadow: 1px 1px 2px white, 0 0 1em black, 0 0 0.2em black;
+}
+
+.seacrh:focus {
+  border-color: #dc3545 !important;
 }
