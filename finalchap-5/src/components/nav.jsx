@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Input } from "reactstrap";
 import Button from "react-bootstrap/Button";
+import Search from "./search";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
+  const [search, setSearch] = useState([]);
 
   const handleMouseEnter = () => {
     setIsHover(true);
@@ -26,6 +28,11 @@ function Nav(props) {
     color: "white",
     borderRadius: "25px",
   };
+  const handleKeyPressed = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/search/${search}`);
+    }
+  };
   const navigate = useNavigate();
   return (
     <div>
@@ -36,12 +43,17 @@ function Nav(props) {
           </div>
 
           <Input
+            type="text"
             className="seacrh bg-transparent     hover:border-rose-700"
             style={inputStyle}
             placeholder="Search Movies"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            // onClick={() => navigate(`name/`)}
+            value={search.original_title}
+            onKeyDown={(e) => handleKeyPressed(e)}
             // prefix={<SearchOutlined />}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           <div className="items flex space-x-4">

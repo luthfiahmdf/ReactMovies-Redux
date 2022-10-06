@@ -2,6 +2,7 @@ import "./App.css";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
+import { BsArrowRight } from "react-icons/bs";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -11,6 +12,7 @@ import { useEffect, useState } from "react";
 import Caro from "./components/caro";
 import Nav from "./components/nav";
 import { useNavigate } from "react-router-dom";
+import Footer from "./components/footer";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -18,7 +20,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/trending/movie/week`, {
+      .get(`${process.env.REACT_APP_BASE_URL}/movie/popular`, {
         params: {
           api_key: process.env.REACT_APP_TMDB_KEY,
         },
@@ -34,28 +36,35 @@ function App() {
       <Caro />
       {/* 
       <div className="site-layout-content 4 mt-32 ml-16 items-center h-4/5 rounded-lg"> */}
-      <>
-        <h1 className="ml-20 mt-20 items-start">Trending Movies</h1>
-        <Swiper
-          slidesPerView={4}
-          spaceBetween={30}
-          className="mySwiper h-3/4 container mt-12"
-        >
-          {movies.map((result, index) => {
-            return (
-              <SwiperSlide>
-                <img
-                  className="h-3/4 rounded-xl"
-                  src={`https://image.tmdb.org/t/p/original/${result.poster_path}`}
-                  alt=""
-                  onClick={() => navigate(`${result.id}`)}
-                />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      </>
-      ;
+      <div className="trending container flex place-content-between mt-20">
+        <h2 className=" items-start">Trending Movies</h2>
+        <div className="flex items-center flex-wrap gap-x-4 text-rose-700 cursor-pointer">
+          <h1 className="text-xl">See All Movies</h1>
+          <span className="text-md">
+            <BsArrowRight />
+          </span>
+        </div>
+      </div>
+      <Swiper
+        slidesPerView={4}
+        spaceBetween={30}
+        className="mySwiper h-3/4 container mt-12"
+      >
+        {movies.map((result, index) => {
+          return (
+            <SwiperSlide>
+              <img
+                key={index.id}
+                className="h-3/4 rounded-xl"
+                src={`https://image.tmdb.org/t/p/original/${result.poster_path}`}
+                alt=""
+                onClick={() => navigate(`${result.id}`)}
+              />
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+      <Footer />
     </div>
     // </div>
   );

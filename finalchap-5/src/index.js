@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Details from "./components/detail";
 import "swiper/css/bundle";
 import "./App.css";
+import Search from "./components/search";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -15,7 +16,8 @@ root.render(
       <Routes>
         <Route>
           <Route path="/" element={<App />} />
-          <Route path=":id" element={<Details />} />
+          <Route path="/:id" element={<Details />} />
+          <Route path="/search/:name" element={<Search />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -16,16 +16,22 @@ function UncontrolledExample(props) {
           />
           <Carousel.Caption>
             <h1 className="text-left">Blonde</h1>
-            <p className="text-left">
+            <p className="caro text-left">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta
               voluptates quaerat placeat quibusdam ducimus, ad quae accusamus
               unde recusandae consectetur.
             </p>
-            <Button variant="danger ">
-              <span className="flex items-center gap-x-3">
-                <AiOutlinePlayCircle /> WATCH TRAILER
-              </span>
-            </Button>
+            <a
+              href="https://www.youtube.com/watch?v=4VH5-b2wwB0"
+              target="blank"
+            >
+              {" "}
+              <Button variant="danger ">
+                <span className="flex items-center gap-x-3">
+                  <AiOutlinePlayCircle /> WATCH TRAILER
+                </span>
+              </Button>
+            </a>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
@@ -36,17 +42,22 @@ function UncontrolledExample(props) {
           />
           <Carousel.Caption>
             <h1 className="font-sans text-left">Jurassic World Dominion</h1>
-            <p className="text-left">
+            <p className="caro text-left">
               {" "}
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis
               magni quod hic ipsum dolorem rem numquam incidunt, libero labore
               quas.{" "}
             </p>
-            <Button variant="danger ">
-              <span className="flex items-center gap-x-3">
-                <AiOutlinePlayCircle /> WATCH TRAILER
-              </span>
-            </Button>
+            <a
+              href="https://www.youtube.com/watch?v=fb5ELWi-ekk"
+              target="blank"
+            >
+              <Button variant="danger ">
+                <span className="flex items-center gap-x-3">
+                  <AiOutlinePlayCircle /> WATCH TRAILER
+                </span>
+              </Button>
+            </a>
           </Carousel.Caption>
         </Carousel.Item>
 
@@ -58,17 +69,22 @@ function UncontrolledExample(props) {
           />
           <Carousel.Caption>
             <h1 className="text-left">Vesper</h1>
-            <p className="text-left">
+            <p className="caro text-left">
               {" "}
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
               minima debitis iure error vel, ea neque inventore odit
               reprehenderit omnis.{" "}
             </p>
-            <Button variant="danger ">
-              <span className="flex items-center gap-x-3">
-                <AiOutlinePlayCircle /> WATCH TRAILER
-              </span>
-            </Button>
+            <a
+              href="https://www.youtube.com/watch?v=9dajBhMSd00"
+              target="blank"
+            >
+              <Button variant="danger ">
+                <span className="flex items-center gap-x-3">
+                  <AiOutlinePlayCircle /> WATCH TRAILER
+                </span>
+              </Button>
+            </a>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
