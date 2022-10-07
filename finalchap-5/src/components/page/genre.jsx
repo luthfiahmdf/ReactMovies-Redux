@@ -21,7 +21,7 @@ function Genre() {
         }
       )
       .then((respone) => {
-        console.log("datas => ", respone.data.results);
+        // console.log("datas => ", respone.data.results);
         setFilm(respone.data.results);
       });
   }, []);

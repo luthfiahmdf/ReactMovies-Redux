@@ -21,7 +21,7 @@ function FilterGenre() {
         },
       })
       .then((respone) => {
-        console.log("datas => ", respone.data.genres);
+        // console.log("datas => ", respone.data.genres);
         setGenre(respone.data.genres);
       });
   }, []);
@@ -34,7 +34,7 @@ function FilterGenre() {
         },
       })
       .then((respone) => {
-        console.log("datas => ", respone.data);
+        // console.log("datas => ", respone.data);
         setMovies(respone.data.results);
       });
   }, []);

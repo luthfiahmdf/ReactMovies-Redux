@@ -23,7 +23,7 @@ function Trending() {
         },
       })
       .then((respone) => {
-        console.log("datas => ", respone.data);
+        // console.log("datas => ", respone.data);
         setMovies(respone.data.results);
       });
   }, []);

@@ -20,7 +20,7 @@ const Details = () => {
         },
       })
       .then((respone) => {
-        console.log("datas => ", respone.data);
+        // console.log("datas => ", respone.data);
         setMovies(respone.data);
       });
   }, []);
@@ -33,7 +33,7 @@ const Details = () => {
         },
       })
       .then((res) => {
-        console.log("actor => ", res.data.cast.slice(0, 4));
+        // console.log("actor => ", res.data.cast.slice(0, 4));
         setactor(res.data.cast.slice(0, 4));
       });
   }, []);

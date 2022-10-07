@@ -17,7 +17,7 @@ function Search(props) {
         `https://api.themoviedb.org/3/search/movie?api_key=97caff1504fb5f9037e7c577be630b77&query=${name}`
       )
       .then((respone) => {
-        console.log("datas => ", respone.data);
+        // console.log("datas => ", respone.data);
         setSearch(respone.data.results);
       });
   }, [name]);
