@@ -6,8 +6,8 @@ import Card from "react-bootstrap/Card";
 import { AiOutlinePlayCircle, AiOutlineStar } from "react-icons/ai";
 
 import axios from "axios";
-import Nav from "./nav";
-import Footer from "./footer";
+import Nav from "../nav";
+import Footer from "../footer";
 const Details = () => {
   let { id } = useParams();
   const [movies, setMovies] = useState([]);
@@ -45,6 +45,7 @@ const Details = () => {
           <div className="cont h-screen ">
             <img
               className="saturate-50  "
+              key={movies.id}
               src={`https://image.tmdb.org/t/p/original/${movies.backdrop_path}`}
               alt=""
             />
@@ -61,9 +62,7 @@ const Details = () => {
                   })}
               </div>
 
-              <p className=" text-md leading-loose  mr-96 ">
-                {movies.overview}
-              </p>
+              <p className=" text-md leading-loose ">{movies.overview}</p>
               <div className="rating flex flex-wrap">
                 <span className="pt-1 text-lg">
                   <AiOutlineStar className="text-amber-500" />
@@ -94,6 +93,7 @@ const Details = () => {
             return (
               <Card style={{ width: "18rem" }}>
                 <Card.Img
+                  key={item.id}
                   variant="top"
                   src={`https://image.tmdb.org/t/p/original/${item.profile_path}`}
                 />

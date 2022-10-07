@@ -5,10 +5,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Details from "./components/detail";
+import Details from "./components/page/detail";
 import "swiper/css/bundle";
 import "./App.css";
-import Search from "./components/search";
+import Search from "./components/page/search";
+import Genre from "./components/page/genre";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ root.render(
           <Route path="/" element={<App />} />
           <Route path="/:id" element={<Details />} />
           <Route path="/search/:name" element={<Search />} />
+          <Route path="/genre/:name" element={<Genre />} />
         </Route>
       </Routes>
     </BrowserRouter>

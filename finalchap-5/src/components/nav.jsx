@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Input } from "reactstrap";
 import Button from "react-bootstrap/Button";
-import Search from "./search";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
