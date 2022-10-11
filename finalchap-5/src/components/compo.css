@@ -78,3 +78,52 @@ p .caro,
 .seacrh:focus {
   border-color: #dc3545 !important;
 }
+
+.modal-title {
+  font-size: 1rem !important;
+}
+.modal-footer {
+  display: flex !important;
+  justify-content: flex-start !important;
+}
+
+.icon {
+  right: 2rem;
+  position: absolute;
+}
+
+.icon-mail {
+  top: 1.6rem;
+  z-index: 9999;
+}
+.icon-mail-regist {
+  top: 8.5rem;
+  z-index: 9999;
+}
+.icon-first {
+  top: 1.6rem;
+  z-index: 9999;
+}
+
+.icon-last {
+  top: 5rem;
+  z-index: 9999;
+}
+
+.icon-eye-login {
+  bottom: 2.6rem;
+}
+.icon-eye {
+  bottom: 5.65rem;
+}
+.icon-eye-confirm {
+  bottom: 2.5rem;
+}
+
+.modal-content {
+  border-radius: 0px !important;
+}
+
+.form-control {
+  border-radius: 20px !important;
+}
