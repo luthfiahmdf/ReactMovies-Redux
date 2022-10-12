@@ -1,8 +1,7 @@
-import React from "react";
 import "./compo.css";
 import logo from "./assets/logoNav.svg";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "reactstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -65,7 +64,7 @@ function Nav(props) {
   };
 
   const EyeConfirm = () => {
-    if (password === "password") {
+    if (passwordConfirm === "password") {
       setPasswordConfirm("text");
       setEyeConfirm(false);
       setTypeConfirm(true);
@@ -93,10 +92,8 @@ function Nav(props) {
             placeholder="Search Movies"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            // onClick={() => navigate(`name/`)}
             value={search.original_title}
             onKeyDown={(e) => handleKeyPressed(e)}
-            // prefix={<SearchOutlined />}
             onChange={(e) => setSearch(e.target.value)}
           />
 
