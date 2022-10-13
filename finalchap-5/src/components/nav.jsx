@@ -1,16 +1,20 @@
 import "./compo.css";
+import Swal from "sweetalert2";
 import logo from "./assets/logoNav.svg";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "reactstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
+import ava from "./assets/users.png";
+import axios from "axios";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
   const [search, setSearch] = useState([]);
+  const [login, setLogin] = useState(false);
   const [show, setShow] = useState(false);
   const [showRegist, setShowRegist] = useState(false);
 
@@ -74,9 +78,100 @@ function Nav(props) {
       setTypeConfirm(false);
     }
   };
+  const [user, setUser] = useState();
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const handleSubmit = async () => {
+    // console.log(email);
+    // console.log(pass);
+
+    try {
+      const res = await axios.post(
+        "http://notflixtv.herokuapp.com/api/v1/users/login",
+        { email: email, password: pass }
+      );
+      // console.log(res.data.data);
+      localStorage.setItem("token", JSON.stringify(res.data.data.token));
+      localStorage.setItem("user", JSON.stringify(res.data.data.first_name));
+      localStorage.setItem("image", JSON.stringify(res.data.data.image));
+      setUser(res.data.data);
+      setPass("");
+      setEmail("");
+      setShow(false);
+      setLogin(true);
+
+      Swal.fire("Horeee!", "Login Berhasil!", "success");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Email atau Password Salah!",
+      });
+    }
+  };
+  useEffect(() => {
+    setUser();
+  }, []);
+
+  // Regist
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [mail, setMail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [pwdConf, setPwdConf] = useState("");
+  const onSubmitReg = async () => {
+    // console.log(firstname);
+    // console.log(lastname);
+    // console.log(mail);
+    // console.log(pwd);
+    // console.log(pwdConf);
+    try {
+      const res = await axios.post(
+        "http://notflixtv.herokuapp.com/api/v1/users",
+        {
+          first_name: firstname,
+          last_name: lastname,
+          email: mail,
+          password: pwd,
+          password_confirmation: pwdConf,
+        }
+      );
+      console.log(res);
+      setShowRegist(false);
+      Swal.fire("Horeee!", "Regist Berhasil!", "success");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Email atau Password Salah!",
+      });
+    }
+  };
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Do you want to Log Out?",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire("Log Out Succes!", "", "success");
+        setTimeout(function () {
+          window.location.reload(1);
+        }, 2000);
+        localStorage.clear();
+      } else if (result.isDenied) {
+        Swal.fire("Gajadi", "", "info");
+      }
+    });
+  };
 
   const navigate = useNavigate();
-
+  let token = localStorage.getItem("token");
+  let profile = localStorage.getItem("user");
+  let image = localStorage.getItem("image");
+  let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return (
     <div>
       <nav>
@@ -96,161 +191,214 @@ function Nav(props) {
             onKeyDown={(e) => handleKeyPressed(e)}
             onChange={(e) => setSearch(e.target.value)}
           />
+          {token && login && token.length ? (
+            <div className="wrapper flex flex-wrap space-x-4 items-center">
+              {user.image ? (
+                <img
+                  src={JSON.parse(image)}
+                  alt=""
+                  className="w-7 rounded-full"
+                />
+              ) : (
+                <img src={ava} alt="" className="w-7" />
+              )}
 
-          <div className="items flex space-x-4">
-            <Button variant="outline-danger" onClick={handleShow}>
-              Login
-            </Button>
-            <Modal show={show} onHide={handleClose} size="md">
-              <Modal.Header closeButton>
-                <Modal.Title>Login To Your Account</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form>
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlInput1"
-                  >
-                    <Form.Control
-                      type="email"
-                      placeholder="Email Address"
-                      className="hover:border-rose-700 focus:bg-rose-700"
-                    />
-                    <div className="icon icon-mail absolute">
-                      <i>
-                        <AiOutlineMail />
-                      </i>
-                    </div>
-                  </Form.Group>
-                  {/* Password */}
-                  <Form.Group className="mb-3">
-                    <Form.Control
-                      type={password}
-                      placeholder="Password"
-                      className={`  ${
-                        type ? "type_password" : ""
-                      } hover:border-rose-700`}
-                    />
-                    <div className="icon icon-eye-login absolute">
-                      <i
-                        onClick={Eye}
-                        className={`fa ${
-                          eye ? "fa-eye-slash" : "fa-thin fa-eye"
-                        }`}
-                      ></i>
-                    </div>
-                  </Form.Group>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="danger">Login</Button>
-              </Modal.Footer>
-            </Modal>
-            {/* Modal Login */}
+              <h2 className="text-white text-xl ">
+                Halo,
+                {JSON.parse(profile)}
+              </h2>
 
-            {/* Modal Register */}
-            <Button variant="danger" onClick={handleShowRegist}>
-              Register
-            </Button>
-            <Modal show={showRegist} onHide={handleCloseRegist} size="md">
-              <Modal.Header closeButton>
-                <Modal.Title>Create Your Account</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form>
-                  {/* First Name */}
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlInput1"
-                  >
-                    <Form.Control
-                      type="first name"
-                      placeholder="First Name"
-                      className="hover:border-rose-700 focus:bg-rose-700"
-                    />
-                    <div className="icon icon-first absolute">
-                      <i>
-                        <AiOutlineUser />
-                      </i>
-                    </div>
-                  </Form.Group>
+              <Button variant="danger" onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <div className="items flex space-x-4">
+              <Button variant="outline-danger" onClick={handleShow}>
+                Login
+              </Button>
+              <Modal show={show} onHide={handleClose} size="md">
+                <Modal.Header closeButton>
+                  <Modal.Title>Login To Your Account</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group
+                      className="mb-3"
+                      controlId="exampleForm.ControlInput2"
+                    >
+                      <Form.Control
+                        type="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email Address"
+                        className="hover:border-rose-700 focus:bg-rose-700"
+                      />
+                      {email.match(regexEmail) === null ? (
+                        <span className="text-rose-700 text-sm ">
+                          Please Input A Valid Email
+                        </span>
+                      ) : (
+                        ""
+                      )}
 
-                  {/* Last Name */}
-                  <Form.Group className="mb-3">
-                    <Form.Control
-                      type="last Name"
-                      placeholder="Last Name"
-                      className="hover:border-rose-700 focus:bg-rose-700"
-                    />
-                    <div className="icon icon-last absolute">
-                      <i>
-                        <AiOutlineUser />
-                      </i>
-                    </div>
-                  </Form.Group>
+                      <div className="icon icon-mail relative">
+                        <i>
+                          <AiOutlineMail />
+                        </i>
+                      </div>
+                    </Form.Group>
 
-                  {/* Email */}
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlInput1"
-                  >
-                    <Form.Control
-                      type="Email"
-                      placeholder="Email Address"
-                      className="hover:border-rose-700 focus:bg-rose-700"
-                    />
-                    <div className="icon icon-mail-regist absolute">
-                      <i>
-                        <AiOutlineMail />
-                      </i>
-                    </div>
-                  </Form.Group>
+                    {/* Password */}
+                    <Form.Group className="mb-3">
+                      <Form.Control
+                        type={password}
+                        onChange={(e) => setPass(e.target.value)}
+                        placeholder="Password"
+                        className={`  ${
+                          type ? "type_password" : ""
+                        } hover:border-rose-700`}
+                      />
+                      <div className="icon icon-eye-login absolute">
+                        <i
+                          onClick={Eye}
+                          className={`fa ${
+                            eye ? "fa-eye-slash" : "fa-thin fa-eye"
+                          }`}
+                        ></i>
+                      </div>
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="danger" onClick={handleSubmit}>
+                    Login
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              {/* Modal Login */}
 
-                  {/* Password */}
-                  <Form.Group className="mb-3">
-                    <Form.Control
-                      type={password}
-                      placeholder="Password"
-                      className={`  ${
-                        type ? "type_password" : ""
-                      } hover:border-rose-700`}
-                    />
-                    <div className="icon icon-eye absolute">
-                      <i
-                        onClick={Eye}
-                        className={`fa ${
-                          eye ? "fa-eye-slash" : "fa-thin fa-eye"
-                        }`}
-                      ></i>
-                    </div>
-                  </Form.Group>
+              {/* Modal Register */}
+              <Button variant="danger" onClick={handleShowRegist}>
+                Register
+              </Button>
+              <Modal show={showRegist} onHide={handleCloseRegist} size="md">
+                <Modal.Header closeButton>
+                  <Modal.Title>Create Your Account</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    {/* First Name */}
+                    <Form.Group
+                      className="mb-3"
+                      controlId="exampleForm.ControlInput1"
+                    >
+                      <Form.Control
+                        type="first name"
+                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="First Name"
+                        className="hover:border-rose-700 focus:bg-rose-700"
+                      />
+                      <div className="icon icon-first absolute">
+                        <i>
+                          <AiOutlineUser />
+                        </i>
+                      </div>
+                    </Form.Group>
 
-                  {/* Password Confirm */}
-                  <Form.Group className="mb-3">
-                    <Form.Control
-                      type={passwordConfirm}
-                      placeholder="Confirm Password"
-                      className={`  ${
-                        typeConfirm ? "type_password" : ""
-                      } hover:border-rose-700`}
-                    />
-                    <div className="icon icon-eye-confirm absolute">
-                      <i
-                        onClick={EyeConfirm}
-                        className={`fa ${
-                          eyeConfirm ? "fa-eye-slash" : "fa-thin fa-eye"
-                        }`}
-                      ></i>
-                    </div>
-                  </Form.Group>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="danger">Regist Now</Button>
-                <Button variant="danger">Sign Up With Google</Button>
-              </Modal.Footer>
-            </Modal>
-          </div>
+                    {/* Last Name */}
+                    <Form.Group className="mb-3">
+                      <Form.Control
+                        type="last Name"
+                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Last Name"
+                        className="hover:border-rose-700 focus:bg-rose-700"
+                      />
+                      <div className="icon icon-last absolute">
+                        <i>
+                          <AiOutlineUser />
+                        </i>
+                      </div>
+                    </Form.Group>
+
+                    {/* Email */}
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Control
+                        type="email"
+                        onChange={(e) => setMail(e.target.value)}
+                        placeholder="Email Address"
+                        className="hover:border-rose-700 focus:bg-rose-700"
+                      />
+                      {mail.match(regexEmail) === null ? (
+                        <span className="text-rose-700 text-sm ">
+                          Please Input A Valid Email
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      <div className="icon icon-mail-regist absolute">
+                        <i>
+                          <AiOutlineMail />
+                        </i>
+                      </div>
+                    </Form.Group>
+
+                    {/* Password */}
+                    <Form.Group className="mb-3">
+                      <Form.Control
+                        type={password}
+                        onChange={(e) => setPwd(e.target.value)}
+                        placeholder="Password"
+                        className={`  ${
+                          type ? "type_password" : ""
+                        } hover:border-rose-700`}
+                      />
+                      <div className="icon icon-eye absolute">
+                        <i
+                          onClick={Eye}
+                          className={`fa ${
+                            eye ? "fa-eye-slash" : "fa-thin fa-eye"
+                          }`}
+                        ></i>
+                      </div>
+                    </Form.Group>
+
+                    {/* Password Confirm */}
+                    <Form.Group className="mb-3">
+                      <Form.Control
+                        type={passwordConfirm}
+                        onChange={(e) => setPwdConf(e.target.value)}
+                        placeholder="Confirm Password"
+                        className={`  ${
+                          typeConfirm ? "type_password" : ""
+                        } hover:border-rose-700`}
+                      />
+                      {/* {pwd === pwdConf ? (
+                        <span className="text-rose-700 text-sm">
+                          Password Confirmation Not same
+                        </span>
+                      ) : (
+                        ""
+                      )} */}
+                      <div className="icon icon-eye-confirm absolute">
+                        <i
+                          onClick={EyeConfirm}
+                          className={`fa ${
+                            eyeConfirm ? "fa-eye-slash" : "fa-thin fa-eye"
+                          }`}
+                        ></i>
+                      </div>
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="danger" onClick={onSubmitReg}>
+                    Regist Now
+                  </Button>
+                  <Button variant="danger">Sign Up With Google</Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
+          )}
         </div>
       </nav>
     </div>

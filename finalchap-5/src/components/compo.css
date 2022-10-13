@@ -127,3 +127,7 @@ p .caro,
 .form-control {
   border-radius: 20px !important;
 }
+
+.modal-footer {
+  border-top: 0px !important;
+}
