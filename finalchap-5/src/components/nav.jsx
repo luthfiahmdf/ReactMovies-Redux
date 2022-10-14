@@ -87,13 +87,14 @@ function Nav(props) {
 
     try {
       const res = await axios.post(
-        "http://notflixtv.herokuapp.com/api/v1/users/login",
+        "https://notflixtv.herokuapp.com/api/v1/users/login",
         { email: email, password: pass }
       );
       // console.log(res.data.data);
       localStorage.setItem("token", JSON.stringify(res.data.data.token));
       localStorage.setItem("user", JSON.stringify(res.data.data.first_name));
       localStorage.setItem("image", JSON.stringify(res.data.data.image));
+      localStorage.setItem("log", JSON.stringify(res.data.data));
       setUser(res.data.data);
       setPass("");
       setEmail("");
@@ -110,8 +111,11 @@ function Nav(props) {
     }
   };
   useEffect(() => {
-    setUser();
-  }, []);
+    setLogin(JSON.parse(localStorage.getItem("log")));
+    setLogin(true);
+    const user = JSON.parse(localStorage.getItem("log"));
+    setUser(user);
+  }, [login]);
 
   // Regist
   const [firstname, setFirstName] = useState("");
@@ -127,7 +131,7 @@ function Nav(props) {
     // console.log(pwdConf);
     try {
       const res = await axios.post(
-        "http://notflixtv.herokuapp.com/api/v1/users",
+        "https://notflixtv.herokuapp.com/api/v1/users",
         {
           first_name: firstname,
           last_name: lastname,
@@ -138,6 +142,7 @@ function Nav(props) {
       );
       console.log(res);
       setShowRegist(false);
+      setShow(true);
       Swal.fire("Horeee!", "Regist Berhasil!", "success");
     } catch (error) {
       Swal.fire({
@@ -200,7 +205,7 @@ function Nav(props) {
                   className="w-7 rounded-full"
                 />
               ) : (
-                <img src={ava} alt="" className="w-7" />
+                <img src={ava} alt="Test" className="w-7" />
               )}
 
               <h2 className="text-white text-xl ">
