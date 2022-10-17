@@ -30,14 +30,15 @@ function Search(props) {
       </div>
       <div className="container">
         <h1 className="mt-12 mb-12"> Result For " {name} "</h1>
-        <div className="card flex flex-row flex-wrap justify-evenly space-y-6">
+        <div className="conatiner  grid grid-cols-4 gap-5">
           {search &&
             search.map((item, index) => {
               return (
-                <Card style={{ width: "18rem" }}>
+                <Card>
                   <Card.Img
                     variant="top"
                     key={index}
+                    className="w-2/4"
                     src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
                     onClick={() => navigate(`/${item.id}`)}
                   />

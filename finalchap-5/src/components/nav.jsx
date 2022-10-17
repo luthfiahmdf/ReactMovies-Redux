@@ -10,6 +10,9 @@ import Button from "react-bootstrap/Button";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import ava from "./assets/users.png";
 import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
+import { useGoogleLogin } from "@react-oauth/google";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
@@ -17,6 +20,7 @@ function Nav(props) {
   const [login, setLogin] = useState(false);
   const [show, setShow] = useState(false);
   const [showRegist, setShowRegist] = useState(false);
+  const [oauth, setOauth] = useState();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -172,10 +176,13 @@ function Nav(props) {
     });
   };
 
+  // OAUTH GOOGLE
+
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
   let profile = localStorage.getItem("user");
   let image = localStorage.getItem("image");
+  let auth = localStorage.getItem("auth");
   let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return (
     <div>
@@ -196,7 +203,7 @@ function Nav(props) {
             onKeyDown={(e) => handleKeyPressed(e)}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {token && login && token.length ? (
+          {token && login && token.length && auth ? (
             <div className="wrapper flex flex-wrap space-x-4 items-center">
               {user.image ? (
                 <img
@@ -210,7 +217,7 @@ function Nav(props) {
 
               <h2 className="text-white text-xl ">
                 Halo,
-                {JSON.parse(profile)}
+                {JSON.parse(profile) || JSON.parse(auth)}
               </h2>
 
               <Button variant="danger" onClick={handleLogout}>
@@ -278,6 +285,30 @@ function Nav(props) {
                   <Button variant="danger" onClick={handleSubmit}>
                     Login
                   </Button>
+                  <div className="signInDiv">
+                    {/* <GoogleLogin
+                      onSuccess={(credentialResponse) => {
+                        console.log(credentialResponse.credential);
+                        var decoded = jwt_decode(credentialResponse.credential);
+                        console.log(decoded);
+                        Swal.fire("Horeee!", "Login Berhasil!", "success");
+                        setLogin(true);
+                        setOauth(decoded);
+                        setShow(false);
+                        setUser(decoded);
+                        localStorage.setItem(
+                          "auth",
+                          JSON.stringify(decoded.given_name)
+                        );
+                      }}
+                      onError={() => {
+                        console.log("Login Failed");
+                      }}
+                    /> */}
+                    {/* <Button variant="danger" onClick={oauth}>
+                      sign In With Google
+                    </Button> */}
+                  </div>
                 </Modal.Footer>
               </Modal>
               {/* Modal Login */}

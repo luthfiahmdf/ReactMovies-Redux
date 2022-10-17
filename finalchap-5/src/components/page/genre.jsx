@@ -33,7 +33,7 @@ function Genre() {
       </div>
       <div className="container">
         <h1 className="mt-12 mb-12"> Result For " {name} " Genre</h1>
-        <div className="card flex flex-row flex-wrap justify-evenly space-y-6 ">
+        <div className="conatiner  grid grid-cols-4 gap-5 ">
           {film &&
             film.map((item, key) => {
               return (

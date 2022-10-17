@@ -8,22 +8,27 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Details from "./components/page/detail";
 import "swiper/css/bundle";
+import Nav from "./components/nav";
 import "./App.css";
 import Search from "./components/page/search";
 import Genre from "./components/page/genre";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route>
-          <Route path="/" element={<App />} />
-          <Route path="/:id" element={<Details />} />
-          <Route path="/search/:name" element={<Search />} />
-          <Route path="/genre/:name" element={<Genre />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId="750824493482-0nc3il5nil72pd9rk0goe829495uvakt.apps.googleusercontent.com">
+      <BrowserRouter>
+        <Routes>
+          <Route>
+            <Route path="/" element={<App />} />
+            <Route path="/:id" element={<Details />} />
+            <Route path="/search/:name" element={<Search />} />
+            <Route path="/genre/:name" element={<Genre />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
 
