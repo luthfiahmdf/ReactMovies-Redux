@@ -17,7 +17,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="750824493482-0nc3il5nil72pd9rk0goe829495uvakt.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="645966915155-p4r24d780idt69lg5rdf7ptbj80alnra.apps.googleusercontent.com">
       <BrowserRouter>
         <Routes>
           <Route>

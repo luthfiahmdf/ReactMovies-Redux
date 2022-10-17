@@ -10,9 +10,8 @@ import Button from "react-bootstrap/Button";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import ava from "./assets/users.png";
 import axios from "axios";
-import { GoogleLogin } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "react-google-login";
+import { gapi } from "gapi-script";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
@@ -96,7 +95,7 @@ function Nav(props) {
       // console.log(res.data.data);
       localStorage.setItem("token", JSON.stringify(res.data.data.token));
       localStorage.setItem("user", JSON.stringify(res.data.data.first_name));
-      localStorage.setItem("image", JSON.stringify(res.data.data.image));
+      localStorage.setItem("image", JSON.parse(res.data.data.image));
       localStorage.setItem("log", JSON.stringify(res.data.data));
       setUser(res.data.data);
       setPass("");
@@ -176,6 +175,23 @@ function Nav(props) {
   };
 
   // OAUTH GOOGLE
+  const responseGoogle = (response) => {
+    console.log(response);
+    localStorage.setItem("token", response.accessToken);
+    localStorage.setItem("image", JSON.stringify(response.profileObj.imageUrl));
+    localStorage.setItem("user", JSON.stringify(response.profileObj.givenName));
+    localStorage.setItem("log", JSON.stringify(response));
+    setUser(response.profileObj);
+    setLogin(true);
+    Swal.fire("Horeee!", "Login Berhasil!", "success");
+  };
+  gapi.load("client:auth2", () => {
+    gapi.auth2.init({
+      clientId:
+        "645966915155-p4r24d780idt69lg5rdf7ptbj80alnra.apps.googleusercontent.com",
+      plugin_name: "",
+    });
+  });
 
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
@@ -204,14 +220,14 @@ function Nav(props) {
           />
           {token && login && token.length ? (
             <div className="wrapper flex flex-wrap space-x-4 items-center">
-              {user.image ? (
+              {user.image || user.imageUrl ? (
                 <img
                   src={JSON.parse(image)}
                   alt=""
                   className="w-7 rounded-full"
                 />
               ) : (
-                <img src={ava} alt="Test" className="w-7" />
+                <img src={ava} alt="" className="w-7" />
               )}
 
               <h2 className="text-white text-xl ">
@@ -285,28 +301,13 @@ function Nav(props) {
                     Login
                   </Button>
                   <div className="signInDiv">
-                    {/* <GoogleLogin
-                      onSuccess={(credentialResponse) => {
-                        console.log(credentialResponse.credential);
-                        var decoded = jwt_decode(credentialResponse.credential);
-                        console.log(decoded);
-                        Swal.fire("Horeee!", "Login Berhasil!", "success");
-                        setLogin(true);
-                        setOauth(decoded);
-                        setShow(false);
-                        setUser(decoded);
-                        localStorage.setItem(
-                          "auth",
-                          JSON.stringify(decoded.given_name)
-                        );
-                      }}
-                      onError={() => {
-                        console.log("Login Failed");
-                      }}
-                    /> */}
-                    {/* <Button variant="danger" onClick={oauth}>
-                      sign In With Google
-                    </Button> */}
+                    <GoogleLogin
+                      clientId="645966915155-p4r24d780idt69lg5rdf7ptbj80alnra.apps.googleusercontent.com"
+                      buttonText="Login"
+                      onSuccess={responseGoogle}
+                      onFailure={responseGoogle}
+                      cookiePolicy={"single_host_origin"}
+                    />
                   </div>
                 </Modal.Footer>
               </Modal>
