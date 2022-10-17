@@ -20,7 +20,6 @@ function Nav(props) {
   const [login, setLogin] = useState(false);
   const [show, setShow] = useState(false);
   const [showRegist, setShowRegist] = useState(false);
-  const [oauth, setOauth] = useState();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -182,7 +181,7 @@ function Nav(props) {
   let token = localStorage.getItem("token");
   let profile = localStorage.getItem("user");
   let image = localStorage.getItem("image");
-  let auth = localStorage.getItem("auth");
+
   let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return (
     <div>
@@ -203,7 +202,7 @@ function Nav(props) {
             onKeyDown={(e) => handleKeyPressed(e)}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {token && login && token.length && auth ? (
+          {token && login && token.length ? (
             <div className="wrapper flex flex-wrap space-x-4 items-center">
               {user.image ? (
                 <img
@@ -217,7 +216,7 @@ function Nav(props) {
 
               <h2 className="text-white text-xl ">
                 Halo,
-                {JSON.parse(profile) || JSON.parse(auth)}
+                {JSON.parse(profile)}
               </h2>
 
               <Button variant="danger" onClick={handleLogout}>
