@@ -113,7 +113,8 @@ function Nav(props) {
     }
   };
   useEffect(() => {
-    setLogin(JSON.parse(localStorage.getItem("log")));
+    const token = JSON.parse(localStorage.getItem("token"));
+    setLogin(token);
     setLogin(true);
     const user = JSON.parse(localStorage.getItem("log"));
     setUser(user);
@@ -126,11 +127,6 @@ function Nav(props) {
   const [pwd, setPwd] = useState("");
   const [pwdConf, setPwdConf] = useState("");
   const onSubmitReg = async () => {
-    // console.log(firstname);
-    // console.log(lastname);
-    // console.log(mail);
-    // console.log(pwd);
-    // console.log(pwdConf);
     try {
       const res = await axios.post(
         "https://notflixtv.herokuapp.com/api/v1/users",
@@ -177,10 +173,10 @@ function Nav(props) {
   // OAUTH GOOGLE
   const responseGoogle = (response) => {
     console.log(response);
-    localStorage.setItem("token", response.accessToken);
+    localStorage.setItem("token", JSON.stringify(response.accessToken));
     localStorage.setItem("image", JSON.stringify(response.profileObj.imageUrl));
     localStorage.setItem("user", JSON.stringify(response.profileObj.givenName));
-    localStorage.setItem("log", JSON.stringify(response));
+    localStorage.setItem("log", JSON.stringify(response.profileObj));
     setUser(response.profileObj);
     setLogin(true);
     Swal.fire("Horeee!", "Login Berhasil!", "success");
@@ -222,7 +218,7 @@ function Nav(props) {
             <div className="wrapper flex flex-wrap space-x-4 items-center">
               {user.image || user.imageUrl ? (
                 <img
-                  src={JSON.parse(image)}
+                  src={JSON.parse(image) || JSON.parse(user.imageUrl)}
                   alt=""
                   className="w-7 rounded-full"
                 />
@@ -303,7 +299,7 @@ function Nav(props) {
                   <div className="signInDiv">
                     <GoogleLogin
                       clientId="645966915155-p4r24d780idt69lg5rdf7ptbj80alnra.apps.googleusercontent.com"
-                      buttonText="Login"
+                      buttonText="Login With Google"
                       onSuccess={responseGoogle}
                       onFailure={responseGoogle}
                       cookiePolicy={"single_host_origin"}
