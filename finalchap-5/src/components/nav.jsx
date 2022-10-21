@@ -10,8 +10,8 @@ import Button from "react-bootstrap/Button";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import ava from "./assets/users.png";
 import axios from "axios";
-import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
+import { GoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
@@ -170,25 +170,6 @@ function Nav(props) {
     });
   };
 
-  // OAUTH GOOGLE
-  const responseGoogle = (response) => {
-    console.log(response);
-    localStorage.setItem("token", JSON.stringify(response.accessToken));
-    localStorage.setItem("image", JSON.stringify(response.profileObj.imageUrl));
-    localStorage.setItem("user", JSON.stringify(response.profileObj.givenName));
-    localStorage.setItem("log", JSON.stringify(response.profileObj));
-    setUser(response.profileObj);
-    setLogin(true);
-    Swal.fire("Horeee!", "Login Berhasil!", "success");
-  };
-  gapi.load("client:auth2", () => {
-    gapi.auth2.init({
-      clientId:
-        "645966915155-p4r24d780idt69lg5rdf7ptbj80alnra.apps.googleusercontent.com",
-      plugin_name: "",
-    });
-  });
-
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
   let profile = localStorage.getItem("user");
@@ -216,9 +197,9 @@ function Nav(props) {
           />
           {token && login && token.length ? (
             <div className="wrapper flex flex-wrap space-x-4 items-center">
-              {user.image || user.imageUrl ? (
+              {user.image || user.picture ? (
                 <img
-                  src={JSON.parse(image) || JSON.parse(user.imageUrl)}
+                  src={JSON.parse(image) || JSON.parse(user.picture)}
                   alt=""
                   className="w-7 rounded-full"
                 />
@@ -298,11 +279,30 @@ function Nav(props) {
                   </Button>
                   <div className="signInDiv">
                     <GoogleLogin
-                      clientId="645966915155-p4r24d780idt69lg5rdf7ptbj80alnra.apps.googleusercontent.com"
-                      buttonText="Login With Google"
-                      onSuccess={responseGoogle}
-                      onFailure={responseGoogle}
-                      cookiePolicy={"single_host_origin"}
+                      onSuccess={(credentialResponse) => {
+                        console.log(credentialResponse);
+                        var decoded = jwt_decode(credentialResponse.credential);
+                        console.log(decoded);
+                        localStorage.setItem(
+                          "token",
+                          JSON.stringify(credentialResponse.credential)
+                        );
+                        localStorage.setItem(
+                          "image",
+                          JSON.stringify(decoded.picture)
+                        );
+                        localStorage.setItem(
+                          "user",
+                          JSON.stringify(decoded.name)
+                        );
+                        localStorage.setItem("log", JSON.stringify(decoded));
+                        setUser(decoded);
+                        setLogin(true);
+                        Swal.fire("Horeee!", "Login Berhasil!", "success");
+                      }}
+                      onError={() => {
+                        console.log("Login Failed");
+                      }}
                     />
                   </div>
                 </Modal.Footer>

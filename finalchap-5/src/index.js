@@ -8,7 +8,7 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Details from "./components/page/detail";
 import "swiper/css/bundle";
-import Nav from "./components/nav";
+
 import "./App.css";
 import Search from "./components/page/search";
 import Genre from "./components/page/genre";
