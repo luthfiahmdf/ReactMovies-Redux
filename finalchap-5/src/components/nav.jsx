@@ -138,7 +138,7 @@ function Nav(props) {
           password_confirmation: pwdConf,
         }
       );
-      console.log(res);
+      // console.log(res);
       setShowRegist(false);
       setShow(true);
       Swal.fire("Horeee!", "Regist Berhasil!", "success");
@@ -280,9 +280,9 @@ function Nav(props) {
                   <div className="signInDiv">
                     <GoogleLogin
                       onSuccess={(credentialResponse) => {
-                        console.log(credentialResponse);
+                        // console.log(credentialResponse);
                         var decoded = jwt_decode(credentialResponse.credential);
-                        console.log(decoded);
+                        // console.log(decoded);
                         localStorage.setItem(
                           "token",
                           JSON.stringify(credentialResponse.credential)
