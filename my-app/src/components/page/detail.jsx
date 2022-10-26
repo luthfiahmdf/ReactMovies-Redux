@@ -1,59 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-
 import { AiOutlinePlayCircle, AiOutlineStar } from "react-icons/ai";
-
-import axios from "axios";
 import Nav from "../nav";
 import Footer from "../footer";
+import Card from "react-bootstrap/Card";
+import { useDispatch, useSelector } from "react-redux";
+import { getMoviesDetail } from "../../features/detailMovies/detailMoviesSlice";
+import { getMoviesCredit } from "../../features/detailMovies/castMoviesSlice";
 const Details = () => {
+  const dispatch = useDispatch();
+  const { entities, loading } = useSelector((state) => state.detail);
+  const { credit, load } = useSelector((state) => state.cast);
   let { id } = useParams();
-  const [movies, setMovies] = useState([]);
-  const [actor, setactor] = useState([]);
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/movie/${id}`, {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
-        },
-      })
-      .then((respone) => {
-        // console.log("datas => ", respone.data);
-        setMovies(respone.data);
-      });
+    dispatch(getMoviesDetail(id));
+    dispatch(getMoviesCredit(id));
   }, []);
+  if (loading && load) return <p>Loading...</p>;
 
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/movie/${id}/credits`, {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
-        },
-      })
-      .then((res) => {
-        // console.log("actor => ", res.data.cast.slice(0, 4));
-        setactor(res.data.cast.slice(0, 4));
-      });
-  }, []);
   return (
     <div className="details h-screen">
       <Nav />
       <div className="content">
-        {movies && (
+        {entities && (
           <div className="cont h-screen ">
             <img
               className="saturate-50  "
-              key={movies.id}
-              src={`https://image.tmdb.org/t/p/original/${movies.backdrop_path}`}
+              key={entities.id}
+              src={`https://image.tmdb.org/t/p/original/${entities.backdrop_path}`}
               alt=""
             />
             <div className="title overlay  text-white  container place-content-center pt-56  ">
-              <h1>{movies.title}</h1>
+              <h1>{entities.title}</h1>
               <div className="genre">
-                {movies.genres &&
-                  movies.genres.map((item) => {
+                {entities.genres &&
+                  entities.genres.map((item) => {
                     return (
                       <ul className="inline-block text-md mb-7  ">
                         <li>{item.name}</li>
@@ -62,15 +44,15 @@ const Details = () => {
                   })}
               </div>
 
-              <p className=" text-md leading-loose ">{movies.overview}</p>
+              <p className=" text-md leading-loose ">{entities.overview}</p>
               <div className="rating flex flex-wrap">
                 <span className="pt-1 text-lg">
                   <AiOutlineStar className="text-amber-500" />
                 </span>
-                <p cla>{Math.ceil(movies.vote_average).toFixed()}/10</p>
+                <p>{Math.ceil(entities.vote_average).toFixed()}/10</p>
               </div>
               <a
-                href={`https://www.youtube.com/results?search_query=${movies.title}`}
+                href={`https://www.youtube.com/results?search_query=${entities.title}`}
                 target="blank"
               >
                 <Button variant="danger ">
@@ -88,8 +70,8 @@ const Details = () => {
         <h1 className="">Cast And Crew</h1>
       </div>
       <div className="actor flex flex-wrap container mt-10 place-content-between">
-        {actor &&
-          actor.map((item) => {
+        {credit &&
+          credit.map((item) => {
             return (
               <Card style={{ width: "18rem" }}>
                 <Card.Img

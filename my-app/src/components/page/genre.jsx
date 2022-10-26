@@ -1,30 +1,24 @@
 import React from "react";
-import axios from "axios";
+
 import Footer from "../footer";
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Nav from "../nav";
+import { useDispatch, useSelector } from "react-redux";
 import Cinema from "../assets/cinema.jpg";
+import { getGenre } from "../../features/genre/genreSlice";
+
 function Genre() {
-  let { name } = useParams();
   const navigate = useNavigate();
-  const [film, setFilm] = useState([]);
+  const dispatch = useDispatch();
+  const { entities, loading } = useSelector((state) => state.genre);
+  let { name } = useParams();
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?api_key=97caff1504fb5f9037e7c577be630b77&language=en-US&query=${name}`,
-        {
-          params: {
-            api_key: process.env.REACT_APP_TMDB_KEY,
-          },
-        }
-      )
-      .then((respone) => {
-        // console.log("datas => ", respone.data.results);
-        setFilm(respone.data.results);
-      });
+    dispatch(getGenre(name));
   }, []);
+
+  if (loading) return <p>loading</p>;
   return (
     <div className="film">
       <Nav />
@@ -34,8 +28,8 @@ function Genre() {
       <div className="container">
         <h1 className="mt-12 mb-12"> Result For " {name} " Genre</h1>
         <div className="conatiner  grid grid-cols-4 gap-5 ">
-          {film &&
-            film.map((item, key) => {
+          {entities &&
+            entities.map((item, key) => {
               return (
                 <Card
                   style={{ width: "18rem" }}
@@ -53,7 +47,7 @@ function Genre() {
               );
             })}
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

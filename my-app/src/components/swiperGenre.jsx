@@ -41,7 +41,7 @@ function FilterGenre() {
   return (
     <div className="genre">
       <div className="trending container flex place-content-between mt-20">
-        <h2 className=" items-start">Trending Movies</h2>
+        <h2 className=" items-start">Movie By Genre</h2>
         <div className="flex items-center flex-wrap gap-x-4 text-rose-700 cursor-pointer">
           <h1 className="text-xl">See All Movies</h1>
           <span className="text-md">

@@ -1,32 +1,21 @@
 import React from "react";
-
-import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import { BsArrowRight } from "react-icons/bs";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { getTrending } from "../../features/trending/trendingSlice";
 
 function Trending() {
-  const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { entities, loading } = useSelector((state) => state.trending);
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/movie/popular`, {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
-        },
-      })
-      .then((respone) => {
-        // console.log("datas => ", respone.data);
-        setMovies(respone.data.results);
-      });
+    dispatch(getTrending());
   }, []);
+  if (loading) return <p>loading..</p>;
   return (
     <div>
       <div className="trending container flex place-content-between mt-20">
@@ -43,19 +32,20 @@ function Trending() {
         spaceBetween={30}
         className="mySwiper h-3/4 container mt-12"
       >
-        {movies.map((result) => {
-          return (
-            <SwiperSlide>
-              <img
-                key={result.id}
-                className="h-3/4 rounded-xl"
-                src={`https://image.tmdb.org/t/p/original/${result.poster_path}`}
-                alt=""
-                onClick={() => navigate(`${result.id}`)}
-              />
-            </SwiperSlide>
-          );
-        })}
+        {entities &&
+          entities.map((result) => {
+            return (
+              <SwiperSlide>
+                <img
+                  key={result.id}
+                  className="h-3/4 rounded-xl"
+                  src={`https://image.tmdb.org/t/p/original/${result.poster_path}`}
+                  alt=""
+                  onClick={() => navigate(`${result.id}`)}
+                />
+              </SwiperSlide>
+            );
+          })}
       </Swiper>
     </div>
   );
