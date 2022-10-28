@@ -12,6 +12,10 @@ import ava from "./assets/users.png";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { postLogin } from "../features/loginRegister/loginSlice";
+import { postLoginGoogle } from "../features/loginRegister/loginGoogleSlice";
+import { postRegister } from "../features/loginRegister/registerSlice";
 
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
@@ -83,40 +87,22 @@ function Nav(props) {
   const [user, setUser] = useState();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const handleSubmit = async () => {
-    // console.log(email);
-    // console.log(pass);
+  const [value, setValue] = useState({
+    email: "",
+    password: "",
+  });
+  let dispatch = useDispatch();
 
-    try {
-      const res = await axios.post(
-        "https://notflixtv.herokuapp.com/api/v1/users/login",
-        { email: email, password: pass }
-      );
-      // console.log(res.data.data);
-      localStorage.setItem("token", JSON.stringify(res.data.data.token));
-      localStorage.setItem("user", JSON.stringify(res.data.data.first_name));
-      localStorage.setItem("image", JSON.parse(res.data.data.image));
-      localStorage.setItem("log", JSON.stringify(res.data.data));
-      setUser(res.data.data);
-      setPass("");
-      setEmail("");
-      setShow(false);
-      setLogin(true);
-
-      Swal.fire("Horeee!", "Login Berhasil!", "success");
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Email atau Password Salah!",
-      });
-    }
+  const handleSubmit = (e) => {
+    dispatch(postLogin(value));
   };
+
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
     setLogin(token);
     setLogin(true);
     const user = JSON.parse(localStorage.getItem("log"));
+
     setUser(user);
   }, [login]);
 
@@ -126,29 +112,38 @@ function Nav(props) {
   const [mail, setMail] = useState("");
   const [pwd, setPwd] = useState("");
   const [pwdConf, setPwdConf] = useState("");
-  const onSubmitReg = async () => {
-    try {
-      const res = await axios.post(
-        "https://notflixtv.herokuapp.com/api/v1/users",
-        {
-          first_name: firstname,
-          last_name: lastname,
-          email: mail,
-          password: pwd,
-          password_confirmation: pwdConf,
-        }
-      );
-      // console.log(res);
-      setShowRegist(false);
-      setShow(true);
-      Swal.fire("Horeee!", "Regist Berhasil!", "success");
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Email atau Password Salah!",
-      });
-    }
+
+  const [payload, setPayload] = useState({
+    first_name: firstname,
+    last_name: lastname,
+    email: mail,
+    password: pwd,
+    password_confirmation: pwdConf,
+  });
+  const onSubmitReg = (e) => {
+    dispatch(postRegister(payload));
+    // try {
+    //   const res = await axios.post(
+    //     "https://notflixtv.herokuapp.com/api/v1/users",
+    //     {
+    //       first_name: firstname,
+    //       last_name: lastname,
+    //       email: mail,
+    //       password: pwd,
+    //       password_confirmation: pwdConf,
+    //     }
+    //   );
+    //   // console.log(res);
+    //   setShowRegist(false);
+    //   setShow(true);
+    //   Swal.fire("Horeee!", "Regist Berhasil!", "success");
+    // } catch (error) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Oops...",
+    //     text: "Email atau Password Salah!",
+    //   });
+    // }
   };
   const handleLogout = () => {
     Swal.fire({
@@ -174,7 +169,7 @@ function Nav(props) {
   let token = localStorage.getItem("token");
   let profile = localStorage.getItem("user");
   let image = localStorage.getItem("image");
-
+  const { logins } = useSelector((state) => state.loginGoogle);
   let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return (
     <div>
@@ -199,7 +194,7 @@ function Nav(props) {
             <div className="wrapper flex flex-wrap space-x-4 items-center">
               {user.image || user.picture ? (
                 <img
-                  src={JSON.parse(image) || JSON.parse(user.picture)}
+                  src={JSON.parse(image) || JSON.parse(logins.picture)}
                   alt=""
                   className="w-7 rounded-full"
                 />
@@ -233,7 +228,9 @@ function Nav(props) {
                     >
                       <Form.Control
                         type="email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) =>
+                          setValue({ ...value, email: e.target.value })
+                        }
                         placeholder="Email Address"
                         className="hover:border-rose-700 focus:bg-rose-700"
                       />
@@ -256,7 +253,9 @@ function Nav(props) {
                     <Form.Group className="mb-3">
                       <Form.Control
                         type={password}
-                        onChange={(e) => setPass(e.target.value)}
+                        onChange={(e) =>
+                          setValue({ ...value, password: e.target.value })
+                        }
                         placeholder="Password"
                         className={`  ${
                           type ? "type_password" : ""
@@ -280,28 +279,31 @@ function Nav(props) {
                   <div className="signInDiv">
                     <GoogleLogin
                       onSuccess={(credentialResponse) => {
-                        // console.log(credentialResponse);
-                        var decoded = jwt_decode(credentialResponse.credential);
-                        // console.log(decoded);
-                        localStorage.setItem(
-                          "token",
-                          JSON.stringify(credentialResponse.credential)
-                        );
-                        localStorage.setItem(
-                          "image",
-                          JSON.stringify(decoded.picture)
-                        );
-                        localStorage.setItem(
-                          "user",
-                          JSON.stringify(decoded.name)
-                        );
-                        localStorage.setItem("log", JSON.stringify(decoded));
-                        setUser(decoded);
+                        dispatch(postLoginGoogle(credentialResponse));
                         setLogin(true);
-                        Swal.fire("Horeee!", "Login Berhasil!", "success");
-                      }}
-                      onError={() => {
-                        console.log("Login Failed");
+                        setUser(credentialResponse);
+                        // console.log(credentialResponse);
+                        //   var decoded = jwt_decode(credentialResponse.credential);
+                        //   // console.log(decoded);
+                        //   localStorage.setItem(
+                        //     "token",
+                        //     JSON.stringify(credentialResponse.credential)
+                        //   );
+                        //   localStorage.setItem(
+                        //     "image",
+                        //     JSON.stringify(decoded.picture)
+                        //   );
+                        //   localStorage.setItem(
+                        //     "user",
+                        //     JSON.stringify(decoded.name)
+                        //   );
+                        //   localStorage.setItem("log", JSON.stringify(decoded));
+                        //   setUser(decoded);
+                        //   setLogin(true);
+                        //   Swal.fire("Horeee!", "Login Berhasil!", "success");
+                        // }}
+                        // onError={() => {
+                        //   console.log("Login Failed");
                       }}
                     />
                   </div>
@@ -326,7 +328,9 @@ function Nav(props) {
                     >
                       <Form.Control
                         type="first name"
-                        onChange={(e) => setFirstName(e.target.value)}
+                        onChange={(e) =>
+                          setPayload({ ...payload, first_name: e.target.value })
+                        }
                         placeholder="First Name"
                         className="hover:border-rose-700 focus:bg-rose-700"
                       />
@@ -341,7 +345,9 @@ function Nav(props) {
                     <Form.Group className="mb-3">
                       <Form.Control
                         type="last Name"
-                        onChange={(e) => setLastName(e.target.value)}
+                        onChange={(e) =>
+                          setPayload({ ...payload, last_name: e.target.value })
+                        }
                         placeholder="Last Name"
                         className="hover:border-rose-700 focus:bg-rose-700"
                       />
@@ -356,7 +362,9 @@ function Nav(props) {
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                       <Form.Control
                         type="email"
-                        onChange={(e) => setMail(e.target.value)}
+                        onChange={(e) =>
+                          setPayload({ ...payload, email: e.target.value })
+                        }
                         placeholder="Email Address"
                         className="hover:border-rose-700 focus:bg-rose-700"
                       />
@@ -378,7 +386,9 @@ function Nav(props) {
                     <Form.Group className="mb-3">
                       <Form.Control
                         type={password}
-                        onChange={(e) => setPwd(e.target.value)}
+                        onChange={(e) =>
+                          setPayload({ ...payload, password: e.target.value })
+                        }
                         placeholder="Password"
                         className={`  ${
                           type ? "type_password" : ""
@@ -398,7 +408,12 @@ function Nav(props) {
                     <Form.Group className="mb-3">
                       <Form.Control
                         type={passwordConfirm}
-                        onChange={(e) => setPwdConf(e.target.value)}
+                        onChange={(e) =>
+                          setPayload({
+                            ...payload,
+                            password_confirmation: e.target.value,
+                          })
+                        }
                         placeholder="Confirm Password"
                         className={`  ${
                           typeConfirm ? "type_password" : ""

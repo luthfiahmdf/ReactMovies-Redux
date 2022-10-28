@@ -9,6 +9,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getMoviesSwipper } from "../features/genre/swipperSlice";
+import { getMoviesList } from "../features/genre/genreListSlice";
 function FilterGenre() {
   const [genre, setGenre] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -25,18 +28,12 @@ function FilterGenre() {
         setGenre(respone.data.genres);
       });
   }, []);
-
+  let dispatch = useDispatch();
+  const { entities, loading } = useSelector((state) => state.swipper);
+  const { list } = useSelector((state) => state.list);
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/movie/popular`, {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
-        },
-      })
-      .then((respone) => {
-        // console.log("datas => ", respone.data);
-        setMovies(respone.data.results);
-      });
+    dispatch(getMoviesSwipper());
+    dispatch(getMoviesList());
   }, []);
   return (
     <div className="genre">
@@ -54,8 +51,8 @@ function FilterGenre() {
         spaceBetween={30}
         className="mySwiper h-3/4 container mt-12"
       >
-        {genre &&
-          genre.map((item, index) => {
+        {list &&
+          list.map((item, index) => {
             return (
               <SwiperSlide>
                 <Button
@@ -75,7 +72,7 @@ function FilterGenre() {
         spaceBetween={30}
         className="mySwiper h-3/4 container mt-12"
       >
-        {movies.map((result) => {
+        {entities.map((result) => {
           return (
             <SwiperSlide>
               <img

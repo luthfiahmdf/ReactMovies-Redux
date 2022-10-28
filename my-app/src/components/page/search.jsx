@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Cinema from "../assets/cinema.jpg";
-import axios from "axios";
+
 import Nav from "../nav";
 import Card from "react-bootstrap/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import Footer from "../footer";
+import { useDispatch, useSelector } from "react-redux";
+import { getMoviesSearch } from "../../features/searchMovies/searchMoviesSlice";
 
 function Search(props) {
-  const [search, setSearch] = useState([]);
-
   let { name } = useParams();
+  let dispatch = useDispatch();
+  const { entities, loading } = useSelector((state) => state.search);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?api_key=97caff1504fb5f9037e7c577be630b77&query=${name}`
-      )
-      .then((respone) => {
-        // console.log("datas => ", respone.data);
-        setSearch(respone.data.results);
-      });
-  }, [name]);
+    dispatch(getMoviesSearch(name));
+  }, [dispatch, name]);
+
   const navigate = useNavigate();
   return (
     <div className="search">
@@ -31,8 +27,8 @@ function Search(props) {
       <div className="container">
         <h1 className="mt-12 mb-12"> Result For " {name} "</h1>
         <div className="conatiner  grid grid-cols-4 gap-5">
-          {search &&
-            search.map((item, index) => {
+          {entities &&
+            entities.map((item, index) => {
               return (
                 <Card>
                   <Card.Img
