@@ -19,7 +19,7 @@ export const getMoviesSearch = createAsyncThunk(
           },
         }
       );
-      console.log(res.data.results);
+      // console.log(res.data.results);
       return res.data.results;
     } catch (error) {
       console.log("error");

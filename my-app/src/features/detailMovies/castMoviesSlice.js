@@ -13,7 +13,7 @@ export const getMoviesCredit = createAsyncThunk(
       const res = await axios.get(
         `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`
       );
-      console.log(res.data.cast);
+      // console.log(res.data.cast);
       return res.data.cast.slice(0, 4);
     } catch (error) {
       console.log("error");

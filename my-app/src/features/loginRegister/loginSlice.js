@@ -3,12 +3,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const initialState = {
-  logins: [],
+  loginUser: [],
   loading: false,
 };
 
 export const postLogin = createAsyncThunk("login/postLog", async (value) => {
-  console.log(value);
+  // console.log(value);
   try {
     const res = await axios.post(
       "https://notflixtv.herokuapp.com/api/v1/users/login",
@@ -21,7 +21,7 @@ export const postLogin = createAsyncThunk("login/postLog", async (value) => {
     localStorage.setItem("log", JSON.stringify(res.data.data));
 
     Swal.fire("Horeee!", "Login Berhasil!", "success");
-    console.log(res);
+    // console.log(res);
     return res.data.data;
   } catch (error) {
     Swal.fire({
@@ -33,7 +33,7 @@ export const postLogin = createAsyncThunk("login/postLog", async (value) => {
 });
 
 export const loginSlice = createSlice({
-  name: "login",
+  name: "loginUser",
   initialState,
   reducers: {},
   extraReducers: {
@@ -42,7 +42,7 @@ export const loginSlice = createSlice({
     },
     [postLogin.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.logins = payload;
+      state.loginUser = payload;
     },
     [postLogin.rejected]: (state) => {
       state.loading = false;

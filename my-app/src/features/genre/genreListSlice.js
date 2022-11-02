@@ -17,7 +17,7 @@ export const getMoviesList = createAsyncThunk("list/getlist", async () => {
         },
       }
     );
-    console.log(res);
+    // console.log(res);
     return res.data.genres;
   } catch (error) {
     console.log("error");

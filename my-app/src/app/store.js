@@ -21,7 +21,7 @@ export const store = configureStore({
     detail: detailReducer,
     cast: castReducer,
     search: searchReducer,
-    login: loginReducer,
+    loginUser: loginReducer,
     loginGoogle: loginGoogleReducer,
     regist: registReducer,
   },

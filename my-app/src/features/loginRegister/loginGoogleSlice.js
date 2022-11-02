@@ -21,6 +21,7 @@ export const postLoginGoogle = createAsyncThunk(
     localStorage.setItem("user", JSON.stringify(decoded.name));
     localStorage.setItem("log", JSON.stringify(decoded));
     Swal.fire("Horeee!", "Login Berhasil!", "success");
+
     return decoded;
   }
 );

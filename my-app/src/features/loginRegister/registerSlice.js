@@ -10,7 +10,7 @@ const initialState = {
 export const postRegister = createAsyncThunk(
   "regist/postRegist",
   async (payload) => {
-    console.log(payload);
+    // console.log(payload);
     try {
       const res = await axios.post(
         "https://notflixtv.herokuapp.com/api/v1/users",

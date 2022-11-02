@@ -16,18 +16,18 @@ function FilterGenre() {
   const [genre, setGenre] = useState([]);
   const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/genre/movie/list`, {
-        params: {
-          api_key: process.env.REACT_APP_TMDB_KEY,
-        },
-      })
-      .then((respone) => {
-        // console.log("datas => ", respone.data.genres);
-        setGenre(respone.data.genres);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_BASE_URL}/genre/movie/list`, {
+  //       params: {
+  //         api_key: process.env.REACT_APP_TMDB_KEY,
+  //       },
+  //     })
+  //     .then((respone) => {
+  //       // console.log("datas => ", respone.data.genres);
+  //       setGenre(respone.data.genres);
+  //     });
+  // }, []);
   let dispatch = useDispatch();
   const { entities, loading } = useSelector((state) => state.swipper);
   const { list } = useSelector((state) => state.list);

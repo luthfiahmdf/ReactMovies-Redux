@@ -88,13 +88,15 @@ function Nav(props) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [value, setValue] = useState({
-    email: "",
-    password: "",
+    email: email,
+    password: password,
   });
   let dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     dispatch(postLogin(value));
+    setUser(value);
+    setLogin(true);
   };
 
   useEffect(() => {
@@ -122,6 +124,7 @@ function Nav(props) {
   });
   const onSubmitReg = (e) => {
     dispatch(postRegister(payload));
+    setShowRegist(false);
     // try {
     //   const res = await axios.post(
     //     "https://notflixtv.herokuapp.com/api/v1/users",
@@ -170,6 +173,7 @@ function Nav(props) {
   let profile = localStorage.getItem("user");
   let image = localStorage.getItem("image");
   const { logins } = useSelector((state) => state.loginGoogle);
+  const { loginUser } = useSelector((state) => state.loginUser);
   let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return (
     <div>
@@ -194,7 +198,7 @@ function Nav(props) {
             <div className="wrapper flex flex-wrap space-x-4 items-center">
               {user.image || user.picture ? (
                 <img
-                  src={JSON.parse(image) || JSON.parse(logins.picture)}
+                  src={JSON.parse(image) || JSON.parse(user.picture)}
                   alt=""
                   className="w-7 rounded-full"
                 />
@@ -282,28 +286,9 @@ function Nav(props) {
                         dispatch(postLoginGoogle(credentialResponse));
                         setLogin(true);
                         setUser(credentialResponse);
-                        // console.log(credentialResponse);
-                        //   var decoded = jwt_decode(credentialResponse.credential);
-                        //   // console.log(decoded);
-                        //   localStorage.setItem(
-                        //     "token",
-                        //     JSON.stringify(credentialResponse.credential)
-                        //   );
-                        //   localStorage.setItem(
-                        //     "image",
-                        //     JSON.stringify(decoded.picture)
-                        //   );
-                        //   localStorage.setItem(
-                        //     "user",
-                        //     JSON.stringify(decoded.name)
-                        //   );
-                        //   localStorage.setItem("log", JSON.stringify(decoded));
-                        //   setUser(decoded);
-                        //   setLogin(true);
-                        //   Swal.fire("Horeee!", "Login Berhasil!", "success");
-                        // }}
-                        // onError={() => {
-                        //   console.log("Login Failed");
+                        setTimeout(function () {
+                          window.location.reload(1);
+                        }, 1000);
                       }}
                     />
                   </div>

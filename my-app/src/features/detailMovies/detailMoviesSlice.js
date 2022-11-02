@@ -14,7 +14,7 @@ export const getMoviesDetail = createAsyncThunk(
       const res = await axios.get(
         `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`
       );
-      console.log(res.data);
+      // console.log(res.data);
       return res.data;
     } catch (error) {
       console.log("error");
