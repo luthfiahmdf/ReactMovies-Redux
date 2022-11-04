@@ -391,7 +391,6 @@ function Nav(props) {
                   <Button variant="danger" onClick={onSubmitReg}>
                     Regist Now
                   </Button>
-                  <Button variant="danger">Sign Up With Google</Button>
                 </Modal.Footer>
               </Modal>
             </div>
