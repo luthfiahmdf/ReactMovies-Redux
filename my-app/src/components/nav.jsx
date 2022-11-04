@@ -17,13 +17,7 @@ import { logIn, postLogin } from "../features/loginRegister/loginSlice";
 import { postLoginGoogle } from "../features/loginRegister/loginGoogleSlice";
 import { postRegister } from "../features/loginRegister/registerSlice";
 // Firebase
-import {
-  auth,
-  signInWithGoogle,
-  logInWithEmailAndPassword,
-  registerWithEmailAndPassword,
-  logout,
-} from "../firebase";
+
 import { useAuthState } from "react-firebase-hooks/auth";
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
