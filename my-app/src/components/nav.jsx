@@ -1,7 +1,7 @@
 import "./compo.css";
 import Swal from "sweetalert2";
 import logo from "./assets/logoNav.svg";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Input } from "reactstrap";
 import Form from "react-bootstrap/Form";
