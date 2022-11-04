@@ -1,50 +1,56 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 const initialState = {
-  loginUser: [],
+  loginUser: {},
   loading: false,
 };
 
-export const postLogin = createAsyncThunk("login/postLog", async (value) => {
-  // console.log(value);
-  try {
-    const res = await axios.post(
-      "https://notflixtv.herokuapp.com/api/v1/users/login",
-      value
-    );
-    // console.log(res.data.data);
-    localStorage.setItem("token", JSON.stringify(res.data.data.token));
-    localStorage.setItem("user", JSON.stringify(res.data.data.first_name));
-    localStorage.setItem("image", JSON.parse(res.data.data.image));
-    localStorage.setItem("log", JSON.stringify(res.data.data));
+const firebaseConfig = {
+  apiKey: "AIzaSyDRXNuyAgrdq-xhQ2H8Ia_Ac5cNQtBkR7c",
+  authDomain: "login-c9664.firebaseapp.com",
+  projectId: "login-c9664",
+  storageBucket: "login-c9664.appspot.com",
+  messagingSenderId: "491201687615",
+  appId: "1:491201687615:web:28044baa800ba5e3dbc88a",
+  measurementId: "G-WQ0E9WJ2H1",
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-    Swal.fire("Horeee!", "Login Berhasil!", "success");
-    // console.log(res);
-    return res.data.data;
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Email atau Password Salah!",
-    });
+export const logIn = createAsyncThunk(
+  "login/postLog",
+  async ({ email, password }) => {
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("token", JSON.stringify(res.user.accessToken));
+      localStorage.setItem("user", JSON.stringify(res.user.displayName));
+      localStorage.setItem("image", JSON.stringify(res.user.photoURL));
+      localStorage.setItem("log", JSON.stringify(res.user));
+
+      // console.log(res);
+      return res.user.providerData;
+    } catch (err) {
+      console.error(err);
+    }
   }
-});
+);
 
 export const loginSlice = createSlice({
-  name: "loginUser",
+  name: "login",
   initialState,
   reducers: {},
   extraReducers: {
-    [postLogin.pending]: (state) => {
+    [logIn.pending]: (state) => {
       state.loading = true;
     },
-    [postLogin.fulfilled]: (state, { payload }) => {
+    [logIn.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.loginUser = payload;
     },
-    [postLogin.rejected]: (state) => {
+    [logIn.rejected]: (state) => {
       state.loading = false;
     },
   },

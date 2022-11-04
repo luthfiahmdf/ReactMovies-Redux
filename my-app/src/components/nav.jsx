@@ -1,7 +1,7 @@
 import "./compo.css";
 import Swal from "sweetalert2";
 import logo from "./assets/logoNav.svg";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Input } from "reactstrap";
 import Form from "react-bootstrap/Form";
@@ -9,14 +9,22 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import ava from "./assets/users.png";
-import axios from "axios";
+
 import { GoogleLogin } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
+// Redux
 import { useDispatch, useSelector } from "react-redux";
-import { postLogin } from "../features/loginRegister/loginSlice";
+import { logIn, postLogin } from "../features/loginRegister/loginSlice";
 import { postLoginGoogle } from "../features/loginRegister/loginGoogleSlice";
 import { postRegister } from "../features/loginRegister/registerSlice";
-
+// Firebase
+import {
+  auth,
+  signInWithGoogle,
+  logInWithEmailAndPassword,
+  registerWithEmailAndPassword,
+  logout,
+} from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 function Nav(props) {
   const [isHover, setIsHover] = useState(false);
   const [search, setSearch] = useState([]);
@@ -31,7 +39,7 @@ function Nav(props) {
   const handleCloseRegist = () => setShowRegist(false);
 
   const [eye, seteye] = useState(true);
-  const [password, setpassword] = useState("password");
+  const [passwordeye, setpasswordeye] = useState("password");
   const [type, settype] = useState(false);
 
   const [eyeConfirm, setEyeConfirm] = useState(true);
@@ -62,12 +70,12 @@ function Nav(props) {
   };
 
   const Eye = () => {
-    if (password === "password") {
-      setpassword("text");
+    if (passwordeye === "password") {
+      setpasswordeye("text");
       seteye(false);
       settype(true);
     } else {
-      setpassword("password");
+      setpasswordeye("password");
       seteye(true);
       settype(false);
     }
@@ -86,6 +94,7 @@ function Nav(props) {
   };
   const [user, setUser] = useState();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [pass, setPass] = useState("");
   const [value, setValue] = useState({
     email: email,
@@ -93,9 +102,14 @@ function Nav(props) {
   });
   let dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    dispatch(postLogin(value));
-    setUser(value);
+  const handleSubmit = async () => {
+    dispatch(logIn(value));
+    Swal.fire("Horeee!", "Login Berhasil!", "success");
+    setTimeout(function () {
+      window.location.reload(1);
+    }, 1500);
+    setShow(false);
+
     setLogin(true);
   };
 
@@ -116,37 +130,16 @@ function Nav(props) {
   const [pwdConf, setPwdConf] = useState("");
 
   const [payload, setPayload] = useState({
-    first_name: firstname,
-    last_name: lastname,
+    name: firstname,
     email: mail,
     password: pwd,
-    password_confirmation: pwdConf,
   });
-  const onSubmitReg = (e) => {
+
+  const onSubmitReg = () => {
     dispatch(postRegister(payload));
     setShowRegist(false);
-    // try {
-    //   const res = await axios.post(
-    //     "https://notflixtv.herokuapp.com/api/v1/users",
-    //     {
-    //       first_name: firstname,
-    //       last_name: lastname,
-    //       email: mail,
-    //       password: pwd,
-    //       password_confirmation: pwdConf,
-    //     }
-    //   );
-    //   // console.log(res);
-    //   setShowRegist(false);
-    //   setShow(true);
-    //   Swal.fire("Horeee!", "Regist Berhasil!", "success");
-    // } catch (error) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Oops...",
-    //     text: "Email atau Password Salah!",
-    //   });
-    // }
+    // registerWithEmailAndPassword(payload.name, payload.email, payload.password);
+    // console.log(payload);
   };
   const handleLogout = () => {
     Swal.fire({
@@ -168,12 +161,18 @@ function Nav(props) {
     });
   };
 
+  const isLoginGoogle = async () => {
+    dispatch(postLoginGoogle());
+    setLogin(true);
+    setUser(user);
+  };
+
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
   let profile = localStorage.getItem("user");
   let image = localStorage.getItem("image");
   const { logins } = useSelector((state) => state.loginGoogle);
-  const { loginUser } = useSelector((state) => state.loginUser);
+  // const { loginUser } = useSelector((state) => state.loginUser);
   let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return (
     <div>
@@ -196,9 +195,9 @@ function Nav(props) {
           />
           {token && login && token.length ? (
             <div className="wrapper flex flex-wrap space-x-4 items-center">
-              {user.image || user.picture ? (
+              {image !== null ? (
                 <img
-                  src={JSON.parse(image) || JSON.parse(user.picture)}
+                  src={JSON.parse(image)}
                   alt=""
                   className="w-7 rounded-full"
                 />
@@ -238,13 +237,13 @@ function Nav(props) {
                         placeholder="Email Address"
                         className="hover:border-rose-700 focus:bg-rose-700"
                       />
-                      {email.match(regexEmail) === null ? (
+                      {/* {email.match(regexEmail) === null ? (
                         <span className="text-rose-700 text-sm ">
                           Please Input A Valid Email
                         </span>
                       ) : (
                         ""
-                      )}
+                      )} */}
 
                       <div className="icon icon-mail relative">
                         <i>
@@ -256,7 +255,7 @@ function Nav(props) {
                     {/* Password */}
                     <Form.Group className="mb-3">
                       <Form.Control
-                        type={password}
+                        type={passwordeye}
                         onChange={(e) =>
                           setValue({ ...value, password: e.target.value })
                         }
@@ -281,16 +280,18 @@ function Nav(props) {
                     Login
                   </Button>
                   <div className="signInDiv">
-                    <GoogleLogin
+                    <Button variant="danger" onClick={isLoginGoogle}>
+                      Login With Google
+                    </Button>
+                    {/* <GoogleLogin
                       onSuccess={(credentialResponse) => {
                         dispatch(postLoginGoogle(credentialResponse));
-                        setLogin(true);
-                        setUser(credentialResponse);
+                      setLogin(true);
                         setTimeout(function () {
                           window.location.reload(1);
                         }, 1000);
                       }}
-                    />
+                    /> */}
                   </div>
                 </Modal.Footer>
               </Modal>
@@ -306,7 +307,7 @@ function Nav(props) {
                 </Modal.Header>
                 <Modal.Body>
                   <Form>
-                    {/* First Name */}
+                    {/*  Name */}
                     <Form.Group
                       className="mb-3"
                       controlId="exampleForm.ControlInput1"
@@ -314,7 +315,7 @@ function Nav(props) {
                       <Form.Control
                         type="first name"
                         onChange={(e) =>
-                          setPayload({ ...payload, first_name: e.target.value })
+                          setPayload({ ...payload, name: e.target.value })
                         }
                         placeholder="First Name"
                         className="hover:border-rose-700 focus:bg-rose-700"
@@ -327,7 +328,7 @@ function Nav(props) {
                     </Form.Group>
 
                     {/* Last Name */}
-                    <Form.Group className="mb-3">
+                    {/* <Form.Group className="mb-3">
                       <Form.Control
                         type="last Name"
                         onChange={(e) =>
@@ -341,7 +342,7 @@ function Nav(props) {
                           <AiOutlineUser />
                         </i>
                       </div>
-                    </Form.Group>
+                    </Form.Group> */}
 
                     {/* Email */}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -370,7 +371,7 @@ function Nav(props) {
                     {/* Password */}
                     <Form.Group className="mb-3">
                       <Form.Control
-                        type={password}
+                        type={passwordeye}
                         onChange={(e) =>
                           setPayload({ ...payload, password: e.target.value })
                         }
@@ -390,36 +391,6 @@ function Nav(props) {
                     </Form.Group>
 
                     {/* Password Confirm */}
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                        type={passwordConfirm}
-                        onChange={(e) =>
-                          setPayload({
-                            ...payload,
-                            password_confirmation: e.target.value,
-                          })
-                        }
-                        placeholder="Confirm Password"
-                        className={`  ${
-                          typeConfirm ? "type_password" : ""
-                        } hover:border-rose-700`}
-                      />
-                      {/* {pwd === pwdConf ? (
-                        <span className="text-rose-700 text-sm">
-                          Password Confirmation Not same
-                        </span>
-                      ) : (
-                        ""
-                      )} */}
-                      <div className="icon icon-eye-confirm absolute">
-                        <i
-                          onClick={EyeConfirm}
-                          className={`fa ${
-                            eyeConfirm ? "fa-eye-slash" : "fa-thin fa-eye"
-                          }`}
-                        ></i>
-                      </div>
-                    </Form.Group>
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>

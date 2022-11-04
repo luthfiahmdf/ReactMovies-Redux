@@ -19,7 +19,7 @@ export const getTrending = createAsyncThunk(
           },
         }
       );
-      console.log(res);
+      // console.log(res);
       return res.data.results;
     } catch (error) {
       console.log("error");
