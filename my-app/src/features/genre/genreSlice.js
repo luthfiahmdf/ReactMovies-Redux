@@ -6,8 +6,8 @@ const initialState = {
 
   loading: false,
 };
-let name = "name";
-export const getGenre = createAsyncThunk("genre/getGenre", async () => {
+
+export const getGenre = createAsyncThunk("genre/getGenre", async (name) => {
   try {
     const res = await axios.get(
       `https://api.themoviedb.org/3/search/movie?api_key=97caff1504fb5f9037e7c577be630b77&language=en-US&query=${name}`,
